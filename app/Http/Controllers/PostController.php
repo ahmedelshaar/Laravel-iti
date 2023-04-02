@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -11,31 +13,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $allPosts = [
-            [
-                'id' => 1,
-                'title' => 'Laravel',
-                'description' => 'hello laravel',
-                'posted_by' => 'Ahmed',
-                'created_at' => '2023-04-01 10:00:00',
-            ],
-
-            [
-                'id' => 2,
-                'title' => 'PHP',
-                'description' => 'hello php',
-                'posted_by' => 'Mohamed',
-                'created_at' => '2023-04-01 10:00:00',
-            ],
-
-            [
-                'id' => 3,
-                'title' => 'Javascript',
-                'description' => 'hello javascript',
-                'posted_by' => 'Mohamed',
-                'created_at' => '2023-04-01 10:00:00',
-            ],
-        ];
+        $allPosts = Post::with('user')->paginate(15);
 
         return view('posts.index',[
             'posts' => $allPosts,
@@ -47,7 +25,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        $users = User::select('id', 'name')->get();
+        return view('posts.create', compact('users'));
     }
 
     /**
@@ -55,22 +34,16 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        Post::create($request->all());
         return redirect()->route('post.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        $post = [
-            'id' => 3,
-            'title' => 'Javascript',
-            'description' => 'hello javascript',
-            'posted_by' => 'Mohamed',
-            'created_at' => '2023-04-01 10:00:00',
-        ];
-
+        $post = Post::where('id', $id)->with('user')->first();
         return view('posts.show', ['post' => $post]);
     }
 
@@ -79,15 +52,12 @@ class PostController extends Controller
      */
     public function edit(int $id)
     {
-        $post = [
-            'id' => 3,
-            'title' => 'Javascript',
-            'description' => 'hello javascript',
-            'posted_by' => 'Mohamed',
-            'created_at' => '2023-04-01 10:00:00',
-        ];
-
-        return view('posts.edit', ['post' => $post]);
+        $post = Post::where('id', $id)->first();
+        if(!$post) {
+            return redirect()->route('post.index');
+        }
+        $users = User::select('id', 'name')->get();
+        return view('posts.edit', ['post' => $post, 'users' => $users]);
     }
 
     /**
@@ -95,6 +65,8 @@ class PostController extends Controller
      */
     public function update(Request $request, int $id)
     {
+        $post = Post::where('id', $id)->first();
+        $post?->update($request->all());
         return redirect()->route('post.show', ['post' => $id]);
     }
 
@@ -103,6 +75,8 @@ class PostController extends Controller
      */
     public function destroy(int $id)
     {
+        $post = Post::where('id', $id)->first();
+        $post?->delete();
         return redirect()->route('post.index');
     }
 }

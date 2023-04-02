@@ -22,8 +22,8 @@
             <tr>
                 <td>{{$post['id']}}</td>
                 <td>{{$post['title']}}</td>
-                <td>{{$post['posted_by']}}</td>
-                <td>{{$post['created_at']}}</td>
+                <td>{{$post['user']['name']}}</td>
+                <td>{{ \Carbon\Carbon::parse($post['created_at'])->format('j F, Y') }}</td>
                 <td>
                     <a href="{{ route('post.show', $post['id']) }}" class="btn btn-info">View</a>
                     <a href="{{ route('post.edit', $post['id']) }}" class="btn btn-primary">Edit</a>
@@ -40,7 +40,7 @@
 
         </tbody>
     </table>
-
+    {{ $posts->links() }}
 @endsection
 
 

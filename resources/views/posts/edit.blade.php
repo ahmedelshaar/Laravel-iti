@@ -18,8 +18,9 @@
         <div class="mb-3">
             <label  class="form-label">Post Creator</label>
             <select class="form-control">
-                <option @if($post['posted_by'] == "Ahmed") selected @endif value="1">Ahmed</option>
-                <option @if($post['posted_by'] == "Mohamed") selected @endif value="2">Mohamed</option>
+                @foreach($users as $user)
+                    <option @if($post['posted_by'] == $user->id) selected @endif value="{{ $user->id }}">{{ $user->name }}</option>
+                @endforeach
             </select>
         </div>
 
