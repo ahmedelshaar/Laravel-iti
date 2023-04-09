@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
+            $table->string('image')->nullable();
+            $table->string('slug')->unique();
             $table->foreignId('posted_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

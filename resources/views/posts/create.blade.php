@@ -1,9 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
 @section('title') Create @endsection
 
 @section('content')
-    <form method="post" action="{{ route('post.store') }}">
+    @include('inc.error')
+    <form method="post" action="{{ route('post.store') }}" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="mb-3">
             <label class="form-label">Title</label>
@@ -21,6 +22,11 @@
                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                 @endforeach
             </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Image</label>
+            <input class="form-control" type="file" id="formFile" name="image">
         </div>
 
         <button class="btn btn-success">Submit</button>

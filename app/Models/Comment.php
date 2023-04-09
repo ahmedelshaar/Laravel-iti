@@ -13,6 +13,7 @@ class Comment extends Model
         'body',
     ];
 
+
     public function commentable()
     {
         return $this->morphTo();

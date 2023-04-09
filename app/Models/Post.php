@@ -2,18 +2,30 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    use HasFactory;
+    use Sluggable, HasFactory;
 
     protected $fillable = [
         'title',
         'description',
         'posted_by',
+        'slug',
+        'image',
     ];
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
+    }
 
     public function user()
     {
@@ -24,4 +36,5 @@ class Post extends Model
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
+
 }
