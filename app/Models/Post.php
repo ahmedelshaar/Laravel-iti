@@ -6,6 +6,10 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static where(string $string, int $id)
+ * @method static create(array|string[] $param)
+ */
 class Post extends Model
 {
     use Sluggable, HasFactory;
